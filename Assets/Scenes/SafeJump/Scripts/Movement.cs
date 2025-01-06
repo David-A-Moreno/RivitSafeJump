@@ -15,14 +15,17 @@ public class Movement : MonoBehaviour
     [SerializeField]
     private ProgressiveBuild progressiveBuild;
 
+    [SerializeField]
+    private SafeJumpManager safeJumpManager;
+
     // Movimiento hacia la posición objetivo
-    public void MoveToTarget(Vector3 targetPosition)
+    public void MoveToTarget(Vector3 targetPosition, string targetTag)
     {
-        StartCoroutine(MoveTowards(targetPosition));
+        StartCoroutine(MoveTowards(targetPosition, targetTag));
     }
 
     // Corutina para mover el sprite
-    private IEnumerator MoveTowards(Vector3 targetPosition)
+    private IEnumerator MoveTowards(Vector3 targetPosition, string targetTag)
     {
         move = true;
         // Mientras la distancia entre el jugador y el objetivo sea mayor a un umbral
@@ -44,6 +47,23 @@ public class Movement : MonoBehaviour
             yield return null; // Espera hasta el siguiente frame
         }
         move = false;
+        if (targetTag == "Thorns")
+        {
+            safeJumpManager.FinishGame();
+        }
+        else if (targetTag == "Bonus1")
+        {
+            safeJumpManager.Score += 20;
+        }
+        else if (targetTag == "Bonus2")
+        {
+            safeJumpManager.Score += 8;
+        }
+        else if (targetTag == "Bonus3")
+        {
+            safeJumpManager.Score += 5;
+        }
+
         progressiveBuild.OneStep();
         progressiveBuild.AutomaticMoveTimer();
 

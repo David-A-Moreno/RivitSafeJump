@@ -344,6 +344,7 @@ public class ProgressiveBuild : MonoBehaviour
         }
         Vector3 newPosition = target.transform.position;
         newPosition.x = 0;
+
         //effects.DestroyOptionEffect(targetStructure);
         StartCoroutine(WaitAndExecute(targetStructure, allThorns, newPosition));
     }
@@ -365,7 +366,7 @@ public class ProgressiveBuild : MonoBehaviour
         {
             if (allThorns)
             {
-                movement.MoveToTarget(targetPosition);
+                movement.MoveToTarget(targetPosition, "");
             }
             else
             {
