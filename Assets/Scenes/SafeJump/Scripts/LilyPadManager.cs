@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class LilyPadManager : MonoBehaviour
 {
+    private Effects effectsScript;
+
     private Dictionary<int, List<Vector3[]>> lilyPadPositions = new Dictionary<int, List<Vector3[]>>()
     {
         // Opciones de lilyPads con 4 posiciones
@@ -48,17 +50,19 @@ public class LilyPadManager : MonoBehaviour
         currentCount = 3;
         currentPositions = new Vector3[] { new Vector3(-1.6f, 0, 0), new Vector3(0, 0, 0), new Vector3(1.6f, 0, 0) };
         currentScale = 1.0f; // Escala predeterminada
+        effectsScript = FindObjectOfType<Effects>();
     }
 
 
     public void InitializeLevel(int level)
     {
+        Debug.Log("nivel: " + level);
         if (level == 1)
         {
             // Para niveles 1 a 3, establecer número y posición predeterminada, sin variación de escala
             currentCount = 3;
             currentPositions = lilyPadPositions[currentCount][0];
-            currentScale = 1.0f; // Escala predeterminada
+            currentScale = 0.13f; // Escala predeterminada
         }
         else if (level == 2)
         {
@@ -81,7 +85,8 @@ public class LilyPadManager : MonoBehaviour
 
     public void RandomScale()
     {
-        currentScale = Random.Range(0.85f, 1.15f); // Ejemplo de escala variable para niveles altos
+        currentScale = Random.Range(0.09f, 0.145f); // Ejemplo de escala variable para niveles altos
+        effectsScript.targetScaleUp = Vector3.one * currentScale;
     }
 
     public void RandomCount()

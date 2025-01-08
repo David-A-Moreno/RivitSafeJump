@@ -22,6 +22,9 @@ public class ProgressiveBuild : MonoBehaviour
     
     [SerializeField]
     private Effects effects; //Effects.cs
+
+    [SerializeField]
+    private SafeJumpManager safeJumpManager;
     /*
     [SerializeField]
     private GameOverManager gameOverScript;
@@ -45,6 +48,8 @@ public class ProgressiveBuild : MonoBehaviour
     private int structuresCreated = 0;
     private int destroyedStructures = 0;
     private int playerLevel = 1;
+
+    public bool gameOver { get; set; } = false;
     Vector3 position = new Vector3(0, 0, 0);
 
     Vector3 resetPosition = new Vector3(0, 0, 0);
@@ -111,7 +116,7 @@ public class ProgressiveBuild : MonoBehaviour
     private int GetInitialPlayerLevel(GameObject structure)
     {
         int index = System.Array.IndexOf(initialStructures, structure);
-        return (index < 11) ? 1 : 2;
+        return (index < 7) ? 1 : 2;
     }
 
     public void OneStep()
@@ -145,7 +150,7 @@ public class ProgressiveBuild : MonoBehaviour
         //Guardar la posicion de la siguiente estructura
         position.y += positionOffsetY;
 
-        if (allThorns && playerLevel > 3)
+        if (allThorns && playerLevel > 4)
         {
             if (structures.Count > 1) // se asegura de que hay al menos dos estructuras en la lista
             {
@@ -163,23 +168,27 @@ public class ProgressiveBuild : MonoBehaviour
     private void SetPlayerLevel()
     {
         int newLevel;
-
-        if (structuresCreated >= 31 && structuresCreated < 41)
+        if (structuresCreated < 10)
         {
-            newLevel = 4;
+            newLevel = 1;
         }
-        else if (structuresCreated >= 21 && structuresCreated < 31)
+        else if (structuresCreated >= 10 && structuresCreated < 20)
+        {
+            newLevel = 2;
+        }
+        else if (structuresCreated >= 20 && structuresCreated < 30)
         {
             newLevel = 3;
         }
-        else if (structuresCreated >= 11 && structuresCreated < 21)
+        else if (structuresCreated >= 40 && structuresCreated < 50)
         {
-            newLevel = 2;
+            newLevel = 4;
         }
         else
         {
             newLevel = 5;
         }
+        
 
         if (playerLevel != newLevel)
         {
@@ -249,30 +258,37 @@ public class ProgressiveBuild : MonoBehaviour
     private IEnumerator CheckMoveStatus()
     {
         GameObject nextStructure = GetNextStructure();
-        effects.AppearOptionEffect(nextStructure);
-        float waitTime;
+        if (!gameOver)
+        {
+            effects.AppearOptionEffect(nextStructure);
+        }
+        float waitTime = 2.7f;
         bool allThorns = nextStructure.GetComponent<BuildStructure>().GetAllThorns();
         if (!allThorns)
         {
-            if (playerLevel == 1) 
+            if (stepsProgress < 10) 
             {
-                waitTime = 2.7f;
-                movement.SetSpeed(20);
+                movement.SetSpeed(4);
             }
-            else if (playerLevel == 2)
+            else if (stepsProgress == 10)
             {
                 waitTime = 2f;
-                movement.SetSpeed(28);
+                movement.SetSpeed(6);
             }
-            else if (playerLevel == 3)
+            else if (stepsProgress == 20)
             {
                 waitTime = 1.5f;
-                movement.SetSpeed(40);
+                movement.SetSpeed(10);
             }
-            else
+            else if (stepsProgress == 30)
             {
                 waitTime = 1f;
-                movement.SetSpeed(55);
+                movement.SetSpeed(16);
+            }
+            else if (stepsProgress == 40)
+            {
+                waitTime = 1f;
+                movement.SetSpeed(20);
             }
         }
         else
@@ -352,7 +368,7 @@ public class ProgressiveBuild : MonoBehaviour
     private IEnumerator WaitAndExecute(GameObject targetStructure, bool allThorns, Vector3 targetPosition)
     {
         // Destruir el efecto
-        //effects.DestroyOptionEffect(targetStructure);
+        effects.DestroyOptionEffect(targetStructure);
 
         //audioFX.PlaySound(5);
 
@@ -370,6 +386,11 @@ public class ProgressiveBuild : MonoBehaviour
             }
             else
             {
+                if (!gameOver)
+                {
+                    gameOver = true;
+                    safeJumpManager.FinishGame();
+                }
                 //gameOverScript.GameOver(targetStructure.transform.position, true);
                 //audioFX.PlaySound(4);
                 //music.mute = true;

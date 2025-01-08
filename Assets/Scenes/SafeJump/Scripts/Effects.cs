@@ -5,6 +5,7 @@ using UnityEngine;
 public class Effects : MonoBehaviour
 {
     private bool inGame = true;
+    public Vector3 targetScaleUp { set; get; } = new Vector3(0.13f, 0.13f, 0.13f);
 
     public void GameOver()
     {
@@ -95,20 +96,19 @@ public class Effects : MonoBehaviour
     private IEnumerator ScaleUp(Transform child)
     {
         Vector3 initialScale = new Vector3(0.03f, 0.03f, 0.03f); // Escala inicial
-        Vector3 targetScale = new Vector3(0.13f, 0.13f, 0.13f);
         float duration = 0.08f; // Duración de la animación en segundos
         float elapsed = 0.0f;
 
         // Escalar progresivamente desde initialScale hasta targetScale en el tiempo 'duration'
         while (elapsed < duration)
         {
-            child.localScale = Vector3.Lerp(initialScale, targetScale, elapsed / duration);
+            child.localScale = Vector3.Lerp(initialScale, targetScaleUp, elapsed / duration);
             elapsed += Time.deltaTime;
             yield return null;
         }
 
         // Asegurarse de que la escala final sea exactamente la objetivo
-        child.localScale = targetScale;
+        child.localScale = targetScaleUp;
     }
 
     private IEnumerator ScaleDown(Transform child)

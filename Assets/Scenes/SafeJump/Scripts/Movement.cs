@@ -33,14 +33,13 @@ public class Movement : MonoBehaviour
         {
             
             // Mover el sprite hacia la posición objetivo
-            transform.position = Vector3.MoveTowards(transform.position, targetPosition, 5 * Time.deltaTime);
-
+            transform.position = Vector3.MoveTowards(transform.position, targetPosition, moveSpeed * Time.deltaTime);
             // Mover la cámara solo en el eje Y
             if (cameraRef != null)
             {
                 // Actualizar la posición de la cámara, solo en el eje Y
                 Vector3 cameraPosition = cameraRef.transform.position;
-                cameraPosition.y = Mathf.MoveTowards(cameraPosition.y, targetPosition.y+3f, 7 * Time.deltaTime);
+                cameraPosition.y = Mathf.MoveTowards(cameraPosition.y, targetPosition.y+3f, moveSpeed * Time.deltaTime);
                 cameraRef.transform.position = cameraPosition;
             }
 
@@ -50,6 +49,7 @@ public class Movement : MonoBehaviour
         if (targetTag == "Thorns")
         {
             safeJumpManager.FinishGame();
+            progressiveBuild.gameOver = true;
         }
         else if (targetTag == "Bonus1")
         {
