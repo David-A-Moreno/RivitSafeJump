@@ -15,8 +15,13 @@ public class SpriteClickable : MonoBehaviour
     }
 
     private void OnMouseDown()
-    {
-        progressiveBuild.DissapearOtherOptions(this.gameObject);
-        spriteToMove.GetComponent<Movement>().MoveToTarget(transform.position, transform.tag);
+    { 
+        Movement movement = spriteToMove.GetComponent<Movement>();
+        if (!movement.move)
+        {
+            progressiveBuild.DissapearOtherOptions(this.gameObject);
+            movement.MoveToTarget(transform.position, transform.tag);
+        }
+        
     }
 }

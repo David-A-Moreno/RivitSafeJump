@@ -180,7 +180,7 @@ public class ProgressiveBuild : MonoBehaviour
         {
             newLevel = 3;
         }
-        else if (structuresCreated >= 40 && structuresCreated < 50)
+        else if (structuresCreated >= 30 && structuresCreated < 40)
         {
             newLevel = 4;
         }

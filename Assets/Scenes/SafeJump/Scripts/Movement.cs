@@ -7,7 +7,7 @@ public class Movement : MonoBehaviour
     // Velocidad de movimiento del sprite
     public int moveSpeed = 5;
 
-    private bool move = false;
+    public bool move { get; set; } = false;
 
     [SerializeField]
     private GameObject cameraRef;
