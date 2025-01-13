@@ -7,6 +7,9 @@ public class SafeJumpManager : ModeSystemGameManager
 {
     private int score = 5;
 
+    [SerializeField]
+    private ProgressiveBuild progressiveBuild;
+
     public override string Name => "SafeJump";  // Nombre del juego
 
     public override int Score
@@ -24,6 +27,7 @@ public class SafeJumpManager : ModeSystemGameManager
     {
         // Lógica para iniciar el juego
         //InitializeGame(_gameMode);
+        progressiveBuild.StartGame();
     }
 
     public override void EndGame()

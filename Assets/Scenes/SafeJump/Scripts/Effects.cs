@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Effects : MonoBehaviour
 {
-    private bool inGame = true;
+    public bool inGame { set; get; } = true;
     public Vector3 targetScaleUp { set; get; } = new Vector3(0.13f, 0.13f, 0.13f);
 
     public void GameOver()

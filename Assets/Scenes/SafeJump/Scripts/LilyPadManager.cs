@@ -46,11 +46,16 @@ public class LilyPadManager : MonoBehaviour
 
     void Awake()
     {
+        InitialValues();
+        effectsScript = FindObjectOfType<Effects>();
+    }
+
+    public void InitialValues()
+    {
         // Para niveles 1 a 3, establecer número y posición predeterminada, sin variación de escala
         currentCount = 3;
         currentPositions = new Vector3[] { new Vector3(-1.6f, 0, 0), new Vector3(0, 0, 0), new Vector3(1.6f, 0, 0) };
         currentScale = 1.0f; // Escala predeterminada
-        effectsScript = FindObjectOfType<Effects>();
     }
 
 

@@ -37,17 +37,23 @@ public class ProgressiveBuild : MonoBehaviour
     */
 
     [SerializeField]
+    private GameObject cameraRef;
+
+    [SerializeField]
     private LilyPadManager lilyPadManager;
 
     [SerializeField]
     private AudioSource music;
 
+    [SerializeField]
+    private GameObject frog;
+
     private GameObject lastStructure = null;
 
-    private int stepsProgress = 0;
-    private int structuresCreated = 0;
-    private int destroyedStructures = 0;
-    private int playerLevel = 1;
+    private int stepsProgress;
+    private int structuresCreated;
+    private int destroyedStructures;
+    private int playerLevel;
 
     public bool gameOver { get; set; } = false;
     Vector3 position = new Vector3(0, 0, 0);
@@ -65,16 +71,68 @@ public class ProgressiveBuild : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        InitializeStructures();
-        //gameStartUI.showGameStartUI();
+        //StartGame();
     }
+
+    public void StartGame()
+    {
+        RemoveAllChildren();
+        lilyPadManager.InitialValues();
+        effects.inGame = true;
+        stepsProgress = 0;
+        structuresCreated = 0;
+        destroyedStructures = 0;
+        playerLevel = 1;
+        structures.Clear();
+        gameOver = false;
+        for (int i = 0; i < initialStructures.Length; i++)
+        {
+            initialStructures[i] = null;
+        }
+        frog.transform.position = new Vector3(0.053f, -4.24f, 0);
+        cameraRef.transform.position = new Vector3(0,0,-10);
+        FillInitialStructures();
+        InitializeStructures();
+    }
+
+    public void RemoveAllChildren()
+    {
+        // Iterar a través de todos los hijos del GameObject
+        foreach (Transform child in transform)
+        {
+            // Eliminar cada hijo
+            Destroy(child.gameObject);
+        }
+    }
+
+    private void FillInitialStructures()
+    {
+        for (int i = 0; i < initialStructures.Length; i++)
+        {
+            // Instancia una nueva estructura y la asigna al arreglo
+            GameObject newStructure = InstantiateStructure();
+
+            if (newStructure != null)
+            {
+                initialStructures[i] = newStructure;
+            }
+            else
+            {
+                Debug.LogWarning($"Failed to instantiate structure at index {i}. Filling with null.");
+                initialStructures[i] = null; // O puedes manejar el caso de fallo como prefieras
+            }
+        }
+    }
+
 
     private void InitializeStructures()
     {
         Vector3 targetPosition = new Vector3(0, -1.18f, 0);
+        Debug.Log("*********");
         foreach (var structure in initialStructures)
         {
             var buildStructure = structure.GetComponent<BuildStructure>();
+            Debug.Log("nivel inicial: " + GetInitialPlayerLevel(structure));
             if (playerLevel != GetInitialPlayerLevel(structure))
             {
                 playerLevel = GetInitialPlayerLevel(structure);
@@ -87,18 +145,11 @@ public class ProgressiveBuild : MonoBehaviour
             }
             Console.WriteLine(allThorns);
             buildStructure.InstantiateLilypadsBasedOnLevel();
-            /*
-            if (!gameStartUI.getFirstGame())
-            {
-                appearFirstOptions();
-            }
-            */
 
             if (System.Array.IndexOf(initialStructures, structure) == 0)
             {
                 appearFirstOptions();
             }
-
 
             structure.transform.position = targetPosition;
             structures.Add(structure);
