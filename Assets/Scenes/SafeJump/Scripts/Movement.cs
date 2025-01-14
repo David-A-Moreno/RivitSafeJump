@@ -5,7 +5,7 @@ using UnityEngine;
 public class Movement : MonoBehaviour
 {
     // Velocidad de movimiento del sprite
-    public int moveSpeed = 5;
+    public int moveSpeed = 4;
 
     public bool move { get; set; } = false;
 
@@ -17,6 +17,12 @@ public class Movement : MonoBehaviour
 
     [SerializeField]
     private SafeJumpManager safeJumpManager;
+
+    [SerializeField]
+    private AudioFX audioFX;
+
+    [SerializeField]
+    private AudioSource music;
 
     // Movimiento hacia la posición objetivo
     public void MoveToTarget(Vector3 targetPosition, string targetTag)
@@ -48,21 +54,29 @@ public class Movement : MonoBehaviour
         move = false;
         if (targetTag == "Thorns")
         {
+            music.Stop();
+            audioFX.PlaySound(4);
+            
             safeJumpManager.FinishGame();
             progressiveBuild.gameOver = true;
         }
-        else if (targetTag == "Bonus1")
+        else if (targetTag == "Bonus1" || targetTag == "Bonus2" || targetTag == "Bonus3")
         {
-            safeJumpManager.Score += 20;
+            audioFX.PlaySound(1);
+            if (targetTag == "Bonus1")
+            {
+                safeJumpManager.Score += 20;
+            }
+            else if (targetTag == "Bonus2")
+            {
+                safeJumpManager.Score += 8;
+            }
+            else if (targetTag == "Bonus3")
+            {
+                safeJumpManager.Score += 5;
+            }
         }
-        else if (targetTag == "Bonus2")
-        {
-            safeJumpManager.Score += 8;
-        }
-        else if (targetTag == "Bonus3")
-        {
-            safeJumpManager.Score += 5;
-        }
+        
 
         progressiveBuild.OneStep();
         progressiveBuild.AutomaticMoveTimer();

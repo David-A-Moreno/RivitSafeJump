@@ -31,10 +31,9 @@ public class ProgressiveBuild : MonoBehaviour
 
     [SerializeField]
     private GameStartUI gameStartUI;
-
+    */
     [SerializeField]
     private AudioFX audioFX;
-    */
 
     [SerializeField]
     private GameObject cameraRef;
@@ -84,6 +83,7 @@ public class ProgressiveBuild : MonoBehaviour
         destroyedStructures = 0;
         playerLevel = 1;
         structures.Clear();
+        movement.SetSpeed(4);
         gameOver = false;
         for (int i = 0; i < initialStructures.Length; i++)
         {
@@ -93,6 +93,7 @@ public class ProgressiveBuild : MonoBehaviour
         cameraRef.transform.position = new Vector3(0,0,-10);
         FillInitialStructures();
         InitializeStructures();
+        music.Play();
     }
 
     public void RemoveAllChildren()
@@ -419,9 +420,11 @@ public class ProgressiveBuild : MonoBehaviour
     private IEnumerator WaitAndExecute(GameObject targetStructure, bool allThorns, Vector3 targetPosition)
     {
         // Destruir el efecto
-        effects.DestroyOptionEffect(targetStructure);
-
-        //audioFX.PlaySound(5);
+        if (!gameOver)
+        {
+            effects.DestroyOptionEffect(targetStructure);
+            audioFX.PlaySound(5);
+        }
 
         float waitingTime = (allThorns) ? 0.5f : 1f;
 
@@ -440,6 +443,8 @@ public class ProgressiveBuild : MonoBehaviour
                 if (!gameOver)
                 {
                     gameOver = true;
+                    audioFX.PlaySound(4);
+                    music.Stop();
                     safeJumpManager.FinishGame();
                 }
                 //gameOverScript.GameOver(targetStructure.transform.position, true);
