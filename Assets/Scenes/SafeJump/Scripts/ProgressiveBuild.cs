@@ -324,23 +324,23 @@ public class ProgressiveBuild : MonoBehaviour
             }
             else if (stepsProgress == 10)
             {
-                waitTime = 2f;
+                waitTime = 1.8f;
                 movement.SetSpeed(6);
             }
             else if (stepsProgress == 20)
             {
-                waitTime = 1.5f;
-                movement.SetSpeed(10);
+                waitTime = 1.4f;
+                movement.SetSpeed(9);
             }
             else if (stepsProgress == 30)
             {
-                waitTime = 1f;
-                movement.SetSpeed(16);
+                waitTime = 1.2f;
+                movement.SetSpeed(12);
             }
             else if (stepsProgress == 40)
             {
-                waitTime = 1f;
-                movement.SetSpeed(20);
+                waitTime = 0.9f;
+                movement.SetSpeed(16);
             }
         }
         else

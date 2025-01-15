@@ -65,15 +65,15 @@ public class Movement : MonoBehaviour
             audioFX.PlaySound(1);
             if (targetTag == "Bonus1")
             {
-                safeJumpManager.Score += 20;
+                safeJumpManager.Score += 7;
             }
             else if (targetTag == "Bonus2")
             {
-                safeJumpManager.Score += 8;
+                safeJumpManager.Score += 4;
             }
             else if (targetTag == "Bonus3")
             {
-                safeJumpManager.Score += 5;
+                safeJumpManager.Score += 2;
             }
         }
         
