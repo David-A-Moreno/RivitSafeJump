@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -11,6 +12,10 @@ public class SafeJumpManager : ModeSystemGameManager
     private ProgressiveBuild progressiveBuild;
 
     public override string Name => "SafeJump";  // Nombre del juego
+
+    public SafeJumpAdditionalData AdditionalData { get => additionalData; set => additionalData = value; }
+
+    private SafeJumpAdditionalData additionalData;
 
     public override int Score
     {
@@ -28,6 +33,13 @@ public class SafeJumpManager : ModeSystemGameManager
         // Lógica para iniciar el juego
         //InitializeGame(_gameMode);
         progressiveBuild.StartGame();
+        additionalData = new SafeJumpAdditionalData();
+    }
+
+    public override string RegisterAdditionalData()
+    {
+        Debug.Log("Datos adicionales:" +additionalData);
+        return JsonConvert.SerializeObject(additionalData);
     }
 
     public override void EndGame()

@@ -5,7 +5,7 @@ using UnityEngine;
 public class Effects : MonoBehaviour
 {
     public bool inGame { set; get; } = true;
-    public Vector3 targetScaleUp { set; get; } = new Vector3(0.13f, 0.13f, 0.13f);
+    public Vector3 targetScaleUp { set; get; } 
 
     public void GameOver()
     {
@@ -15,35 +15,38 @@ public class Effects : MonoBehaviour
     public void DestroyOptionEffect(GameObject parent)
     {
         // Iterar sobre todos los hijos del GameObject
-        foreach (Transform child in parent.transform)
+        if (parent != null)
         {
-            if (child.CompareTag("Thorns") ||
-                child.CompareTag("Bonus1") ||
-                child.CompareTag("Bonus2") ||
-                child.CompareTag("Bonus3"))
+            foreach (Transform child in parent.transform)
             {
-                // Obtener el nombre del hijo para construir la ruta del prefab
-                string childTag = child.tag;  // Usar el tag del hijo, asegúrate de asignar el tag adecuado
-                string prefabPath = $"Prefabs/{childTag}DestroyEffect";
-
-                // Cargar el prefab desde la ruta especificada
-                GameObject destroyEffectPrefab = Resources.Load<GameObject>(prefabPath);
-
-                if (destroyEffectPrefab != null)
+                if (child.CompareTag("Thorns") ||
+                    child.CompareTag("Bonus1") ||
+                    child.CompareTag("Bonus2") ||
+                    child.CompareTag("Bonus3"))
                 {
-                    // Instanciar el prefab en la nueva posición
-                    GameObject destroyEffectInstance = Instantiate(destroyEffectPrefab, child.position, Quaternion.identity);
+                    // Obtener el nombre del hijo para construir la ruta del prefab
+                    string childTag = child.tag;  // Usar el tag del hijo, asegúrate de asignar el tag adecuado
+                    string prefabPath = $"Prefabs/{childTag}DestroyEffect";
 
-                    // Destruir el prefab después de un tiempo (si es necesario), por ejemplo, después de 5 segundos
-                    Destroy(destroyEffectInstance, 5f);
-                }
-                else
-                {
-                    Debug.LogWarning($"Prefab not found at path: {prefabPath}");
-                }
+                    // Cargar el prefab desde la ruta especificada
+                    GameObject destroyEffectPrefab = Resources.Load<GameObject>(prefabPath);
 
-                // Destruir el hijo original
-                Destroy(child.gameObject);
+                    if (destroyEffectPrefab != null)
+                    {
+                        // Instanciar el prefab en la nueva posición
+                        GameObject destroyEffectInstance = Instantiate(destroyEffectPrefab, child.position, Quaternion.identity);
+
+                        // Destruir el prefab después de un tiempo (si es necesario), por ejemplo, después de 5 segundos
+                        Destroy(destroyEffectInstance, 5f);
+                    }
+                    else
+                    {
+                        Debug.LogWarning($"Prefab not found at path: {prefabPath}");
+                    }
+
+                    // Destruir el hijo original
+                    Destroy(child.gameObject);
+                }
             }
         }
     }

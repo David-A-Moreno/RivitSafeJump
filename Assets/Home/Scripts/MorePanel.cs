@@ -21,9 +21,17 @@ public class MorePanel : MonoBehaviour
     private void Start()
     {
         apiHelper = FindObjectOfType<APIHelper>();
+        if (apiHelper == null)
+        {
+            Debug.LogError("APIHelper no se encontró en la escena.");
+        }
+        else
+        {
+            Debug.Log("APIHelper encontrado correctamente.");
+            apiHelper.MorePanel = this;
+        }
         showMessage = GetComponent<ShowMessage>();
         UpdateShowMessage("");
-        apiHelper.MorePanel = this;
         updateBeforeSignOut = true;
     }
     

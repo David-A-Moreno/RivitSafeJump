@@ -59,6 +59,9 @@ public class Movement : MonoBehaviour
             
             safeJumpManager.FinishGame();
             progressiveBuild.gameOver = true;
+            progressiveBuild.setLostLevel();
+            progressiveBuild.SaveAdditionalData();
+
         }
         else if (targetTag == "Bonus1" || targetTag == "Bonus2" || targetTag == "Bonus3")
         {

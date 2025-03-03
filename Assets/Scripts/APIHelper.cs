@@ -116,7 +116,7 @@ public class APIHelper : MonoBehaviour
             _token.TokenData = data;
             _token.ExistAccessToken = true;
             ConfirmAccess(true);
-            UpdateShowMessageLogin("");
+            //UpdateShowMessageLogin("");
 
             // Se guarda el refresk token en las preferencias
             _token.SetTokenPlayerPrefs();
@@ -199,6 +199,10 @@ public class APIHelper : MonoBehaviour
         UnityWebRequest www = RequestSyncronizeData(URL, json);
 
         yield return www.SendWebRequest();
+
+        Debug.Log("www es: " + www.result);
+        Debug.LogError("Error HTTP: " + www.responseCode + " - " + www.error);
+
         if (www.result != UnityWebRequest.Result.Success)
         {
             //msg = "Los datos no han sido sincronizados";
@@ -284,6 +288,8 @@ public class APIHelper : MonoBehaviour
         if(_token.TokenData == null)
             LoadTokenPlayerPrefs(); //Carga los datos del último token guardado
 
+        Debug.Log("token " + _token.TokenData);
+        
         string tokenData = _token.TokenType + _token.TokenData["access_token"];
 
         UnityWebRequest www = new UnityWebRequest(URL, "POST");

@@ -136,6 +136,7 @@ public class UserDataManager : MonoBehaviour
         PersonalData.TopScores = PersonalData.TopScores != null ? PersonalData.TopScores : new Dictionary<string, string>();
         //PersonalData.CurrentSessionId = -1;
         //PersonalData.IsUpdatingSession = false;
+        Debug.Log("USERNAME: " + username);
         PersonalData.PlaySessionsData = new List<PlaySessionData>();
 
         SaveData();

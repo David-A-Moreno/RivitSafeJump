@@ -53,6 +53,10 @@ public class ProgressiveBuild : MonoBehaviour
     private int structuresCreated;
     private int destroyedStructures;
     private int playerLevel;
+    public int nogoOptionsAvoided;
+    private int bestGoStreak=0;
+    private int currentGoStreak;
+    private int lostLevel { get; set; }
 
     public bool gameOver { get; set; } = false;
     Vector3 position = new Vector3(0, 0, 0);
@@ -85,6 +89,10 @@ public class ProgressiveBuild : MonoBehaviour
         structures.Clear();
         movement.SetSpeed(4);
         gameOver = false;
+        nogoOptionsAvoided = 0;
+        bestGoStreak = 0;
+        currentGoStreak = 0;
+        lostLevel = 0;
         for (int i = 0; i < initialStructures.Length; i++)
         {
             initialStructures[i] = null;
@@ -93,7 +101,8 @@ public class ProgressiveBuild : MonoBehaviour
         cameraRef.transform.position = new Vector3(0,0,-10);
         FillInitialStructures();
         InitializeStructures();
-        music.Play();
+        effects.targetScaleUp = new Vector3(0.13f, 0.13f, 0.13f);
+        //music.Play();
     }
 
     public void RemoveAllChildren()
@@ -175,6 +184,7 @@ public class ProgressiveBuild : MonoBehaviour
     {
         stepsProgress++;
         structuresCreated++;
+        currentGoStreak++;
         //Inicializar nueva estructura
         GameObject randomStructure = InstantiateStructure();
         if (randomStructure == null) return;
@@ -290,6 +300,7 @@ public class ProgressiveBuild : MonoBehaviour
             structures.RemoveAt(0);
             Destroy(firstStructure);
             destroyedStructures += 1;
+            
         }
         else
         {
@@ -360,7 +371,10 @@ public class ProgressiveBuild : MonoBehaviour
             yield return null;
         }
         // Busca el GameObject con el tag "FreePath" dentro de la estructura en la posici�n stepsProgress+1
-        SetAutomaticMovement(nextStructure, "Thorns2", allThorns);
+        if (!gameOver)
+        {
+            SetAutomaticMovement(nextStructure, "Thorns2", allThorns);
+        }
     }
 
     private GameObject GetNextStructure()
@@ -410,7 +424,15 @@ public class ProgressiveBuild : MonoBehaviour
             }
             lastStructure = targetStructure;
         }
-        Vector3 newPosition = target.transform.position;
+        Vector3 newPosition;
+        if (target != null)
+        {
+            newPosition = target.transform.position;
+        }
+        else
+        {
+            newPosition = new Vector3(0, 0, 0);
+        }
         newPosition.x = 0;
 
         //effects.DestroyOptionEffect(targetStructure);
@@ -434,9 +456,15 @@ public class ProgressiveBuild : MonoBehaviour
         // AquI continua el codigo que se ejecutar despues de la espera de 2 segundos
         if (stepsProgress > 0)
         {
-            if (allThorns)
+            if (allThorns && !gameOver)
             {
                 movement.MoveToTarget(targetPosition, "");
+                nogoOptionsAvoided++;
+                if (currentGoStreak > bestGoStreak)
+                {
+                    bestGoStreak = currentGoStreak;
+                }
+                currentGoStreak = 0;
             }
             else
             {
@@ -445,6 +473,8 @@ public class ProgressiveBuild : MonoBehaviour
                     gameOver = true;
                     audioFX.PlaySound(4);
                     music.Stop();
+                    setLostLevel();
+                    SaveAdditionalData();
                     safeJumpManager.FinishGame();
                 }
                 //gameOverScript.GameOver(targetStructure.transform.position, true);
@@ -452,6 +482,21 @@ public class ProgressiveBuild : MonoBehaviour
                 //music.mute = true;
             }
         }
+    }
+
+    public void SaveAdditionalData ()
+    {
+        safeJumpManager.AdditionalData.lostLevel = lostLevel;
+        Debug.Log("Lost level: " + safeJumpManager.AdditionalData.lostLevel);
+        safeJumpManager.AdditionalData.goOptionStreak = bestGoStreak;
+        Debug.Log("Go Option Streak: " + safeJumpManager.AdditionalData.goOptionStreak);
+        safeJumpManager.AdditionalData.nogoOptionsAvoided = nogoOptionsAvoided;
+        Debug.Log("Go Option Streak: " + safeJumpManager.AdditionalData.nogoOptionsAvoided);
+    }
+
+    public void setLostLevel()
+    {
+        lostLevel = playerLevel;
     }
 
     public void ActivateAllChildren(GameObject parent)
@@ -510,13 +555,17 @@ public class ProgressiveBuild : MonoBehaviour
     // M�todo auxiliar para buscar un hijo por tag
     private GameObject FindChildWithTag(GameObject parent, string tag)
     {
-        foreach (Transform child in parent.transform)
+        if (parent != null)
         {
-            if (child.CompareTag(tag))
+            foreach (Transform child in parent.transform)
             {
-                return child.gameObject;
+                if (child.CompareTag(tag))
+                {
+                    return child.gameObject;
+                }
             }
         }
+        
         return null;
     }
 

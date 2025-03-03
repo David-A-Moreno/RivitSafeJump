@@ -68,7 +68,6 @@ public class Login : MonoBehaviour
 
     public IEnumerator VerifyUser()
     {
-        
         string username = userTextFieldLogin.text;
         string password = passwordTextFieldLogin.text;
         bool checkOldCredentials = true;
@@ -79,13 +78,12 @@ public class Login : MonoBehaviour
 
             if(apiHelper.Token.ExistAccessToken)
             {
-                if(userDataManager.PersonalData.PlaySessionsData.Count > 0)
+                if (userDataManager.PersonalData.PlaySessionsData.Count > 0)
                 {
                     string jsonString = JsonConvert.SerializeObject(userDataManager.PersonalData);
                     //apiHelper.IsFirstSession = isUserFirstSession();
                     apiHelper.Sync(jsonString);
                 }
-
                 userDataManager.RegisterEmailAndPassword(username, Encryption.Encrypt(password));
                 checkOldCredentials = false;
             }
