@@ -20,7 +20,8 @@ public class SpriteClickable : MonoBehaviour
         if (!movement.move)
         {
             progressiveBuild.DissapearOtherOptions(this.gameObject);
-            movement.MoveToTarget(transform.position, transform.tag);
+            movement.MoveToTarget(transform.position, transform.tag, false);
+            movement.currentLilyPad = this.gameObject;
         }
         
     }

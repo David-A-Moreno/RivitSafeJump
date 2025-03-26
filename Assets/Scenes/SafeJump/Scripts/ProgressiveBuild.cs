@@ -331,27 +331,28 @@ public class ProgressiveBuild : MonoBehaviour
         {
             if (stepsProgress < 10) 
             {
+                waitTime = 2f;
                 movement.SetSpeed(4);
             }
             else if (stepsProgress == 10)
             {
-                waitTime = 1.8f;
-                movement.SetSpeed(6);
+                waitTime = 1.7f;
+                movement.SetSpeed(7);
             }
             else if (stepsProgress == 20)
             {
-                waitTime = 1.4f;
-                movement.SetSpeed(9);
+                waitTime = 1.3f;
+                movement.SetSpeed(10);
             }
             else if (stepsProgress == 30)
             {
-                waitTime = 1.2f;
+                waitTime = 1.1f;
                 movement.SetSpeed(12);
             }
             else if (stepsProgress == 40)
             {
                 waitTime = 0.9f;
-                movement.SetSpeed(16);
+                movement.SetSpeed(15);
             }
         }
         else
@@ -458,7 +459,7 @@ public class ProgressiveBuild : MonoBehaviour
         {
             if (allThorns && !gameOver)
             {
-                movement.MoveToTarget(targetPosition, "");
+                movement.MoveToTarget(targetPosition, "", true);
                 nogoOptionsAvoided++;
                 if (currentGoStreak > bestGoStreak)
                 {

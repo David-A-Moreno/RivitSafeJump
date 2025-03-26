@@ -114,7 +114,7 @@ public class Effects : MonoBehaviour
         child.localScale = targetScaleUp;
     }
 
-    private IEnumerator ScaleDown(Transform child)
+    public IEnumerator ScaleDown(Transform child)
     {
         Vector3 initialScale = child.localScale; // Escala inicial (la escala actual del objeto)
         Vector3 targetScale = new Vector3(0, 0, 0); // Escala pequeña (desaparecer)

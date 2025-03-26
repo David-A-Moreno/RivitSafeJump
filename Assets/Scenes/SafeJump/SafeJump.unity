@@ -1108,6 +1108,7 @@ MonoBehaviour:
   safeJumpManager: {fileID: 1056761566}
   audioFX: {fileID: 1272160892}
   music: {fileID: 1620758271}
+  effects: {fileID: 1620758270}
 --- !u!82 &1272160891
 AudioSource:
   m_ObjectHideFlags: 0

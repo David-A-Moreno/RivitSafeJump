@@ -9,6 +9,8 @@ public class Movement : MonoBehaviour
 
     public bool move { get; set; } = false;
 
+    public GameObject currentLilyPad { get; set; }
+
     [SerializeField]
     private GameObject cameraRef;
 
@@ -24,22 +26,34 @@ public class Movement : MonoBehaviour
     [SerializeField]
     private AudioSource music;
 
+    [SerializeField]
+    private Effects effects;
+
     // Movimiento hacia la posición objetivo
-    public void MoveToTarget(Vector3 targetPosition, string targetTag)
+    public void MoveToTarget(Vector3 targetPosition, string targetTag, bool moveWithLilypad)
     {
-        StartCoroutine(MoveTowards(targetPosition, targetTag));
+        StartCoroutine(MoveTowards(targetPosition, targetTag,  moveWithLilypad));
     }
 
     // Corutina para mover el sprite
-    private IEnumerator MoveTowards(Vector3 targetPosition, string targetTag)
+    private IEnumerator MoveTowards(Vector3 targetPosition, string targetTag, bool moveWithLilypad)
     {
         move = true;
         // Mientras la distancia entre el jugador y el objetivo sea mayor a un umbral
+        if (!moveWithLilypad && currentLilyPad != null)
+        {
+            StartCoroutine(effects.ScaleDown(currentLilyPad.transform));
+        }
         while (Vector3.Distance(transform.position, targetPosition) > 0.1f)
         {
             
             // Mover el sprite hacia la posición objetivo
             transform.position = Vector3.MoveTowards(transform.position, targetPosition, moveSpeed * Time.deltaTime);
+
+            if (moveWithLilypad)
+            {
+                currentLilyPad.transform.position = Vector3.MoveTowards(transform.position, targetPosition, moveSpeed * Time.deltaTime);
+            }
             // Mover la cámara solo en el eje Y
             if (cameraRef != null)
             {
