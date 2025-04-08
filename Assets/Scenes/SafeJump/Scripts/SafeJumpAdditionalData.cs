@@ -9,4 +9,6 @@ public class SafeJumpAdditionalData
     public int nogoOptionsAvoided { get; set; }
     public int goOptionStreak { get; set; }
     public int lostLevel { get; set; }
+    public float averageReactionTimeGo { get; set; }
+    public float reactionTimeNogo { get; set; }
 }

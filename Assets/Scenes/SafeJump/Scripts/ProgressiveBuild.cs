@@ -58,6 +58,13 @@ public class ProgressiveBuild : MonoBehaviour
     private int currentGoStreak;
     private int lostLevel { get; set; }
 
+    public bool firstMoveProcessed = false;
+
+    public float lastOptionAppearTime;
+    public float totalGoReactionTime;
+    public int goReactionCount;
+    public float reactionTimeNogo;
+
     public bool gameOver { get; set; } = false;
     Vector3 position = new Vector3(0, 0, 0);
 
@@ -93,6 +100,9 @@ public class ProgressiveBuild : MonoBehaviour
         bestGoStreak = 0;
         currentGoStreak = 0;
         lostLevel = 0;
+        totalGoReactionTime = 0f;
+        goReactionCount = 0;
+        reactionTimeNogo = 0f;
         for (int i = 0; i < initialStructures.Length; i++)
         {
             initialStructures[i] = null;
@@ -183,6 +193,7 @@ public class ProgressiveBuild : MonoBehaviour
     public void OneStep()
     {
         stepsProgress++;
+        if (stepsProgress == 1) firstMoveProcessed = true;
         structuresCreated++;
         currentGoStreak++;
         //Inicializar nueva estructura
@@ -324,6 +335,7 @@ public class ProgressiveBuild : MonoBehaviour
         if (!gameOver)
         {
             effects.AppearOptionEffect(nextStructure);
+            lastOptionAppearTime = Time.time;
         }
         float waitTime = 2.7f;
         bool allThorns = nextStructure.GetComponent<BuildStructure>().GetAllThorns();
@@ -493,6 +505,12 @@ public class ProgressiveBuild : MonoBehaviour
         Debug.Log("Go Option Streak: " + safeJumpManager.AdditionalData.goOptionStreak);
         safeJumpManager.AdditionalData.nogoOptionsAvoided = nogoOptionsAvoided;
         Debug.Log("Go Option Streak: " + safeJumpManager.AdditionalData.nogoOptionsAvoided);
+        // Calcula promedio solo si hay movimientos válidos
+        safeJumpManager.AdditionalData.averageReactionTimeGo =
+            (goReactionCount > 0) ? totalGoReactionTime / goReactionCount : 0;
+        Debug.Log("Average Reaction Time Go: " + safeJumpManager.AdditionalData.averageReactionTimeGo);
+        safeJumpManager.AdditionalData.reactionTimeNogo = reactionTimeNogo;
+        Debug.Log("Reaction Time No Go " + safeJumpManager.AdditionalData.reactionTimeNogo);
     }
 
     public void setLostLevel()
